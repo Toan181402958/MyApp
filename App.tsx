@@ -1,28 +1,33 @@
-import firestore from '@react-native-firebase/firestore'
-import React from 'react'
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-const Demo = () => {
-  const handleSend = async () => {
-    const value = await firestore().collection('User').doc('userId1').onSnapshot(snap => {
-      console.log('snap', snap)
-    })
-    console.log('value', value)
-  }
+import firestore from '@react-native-firebase/firestore';
+import {NavigationContainer} from '@react-navigation/native';
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import React from 'react';
+import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import LoginScreen from './app/screen/auth/LoginScreen';
+import OTPScreen from './app/screen/auth/OTPScreen';
+import RegisterScreen from './app/screen/auth/RegisterScreen';
+import HomeScreen from './app/screen/main/HomeScreen';
+export type RootStackParams = {
+  LoginScreen: undefined;
+  RegisterScreen: undefined;
+  HomeScreen: undefined;
+  OTPScreen: {
+    user: string;
+    password: string;
+  };
+};
+const stack = createNativeStackNavigator<RootStackParams>();
+const App = () => {
   return (
-    <View style={styles.container}>
-      <TouchableOpacity
-        onPress={handleSend}
-      >
-        <Text>Send</Text>
-      </TouchableOpacity>
-    </View>
-  )
-}
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  }
-})
-export default Demo
+    <NavigationContainer>
+      <stack.Navigator screenOptions={{headerShown: false}}>
+        <stack.Screen name="LoginScreen" component={LoginScreen} />
+        <stack.Screen name="RegisterScreen" component={RegisterScreen} />
+        <stack.Screen name="HomeScreen" component={HomeScreen} />
+        <stack.Screen name="OTPScreen" component={OTPScreen} />
+      </stack.Navigator>
+    </NavigationContainer>
+  );
+};
+
+export default App;
